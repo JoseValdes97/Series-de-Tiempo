@@ -1,5 +1,0 @@
-READ ME
-
--------------------------------------------------
-Este es el proyecto para el curso Series de tiempo univaridas 2023-2
-R

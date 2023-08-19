@@ -1,12 +1,94 @@
 ---
 title: "Cuerpo del Proyecto"
-author: "Kevin Rubiano, Mario y  José Valdés"
+author: "Kevin Rubiano, Mario Castaño y  José Valdés"
 date: "2023-08-17"
 output: html_document
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+# librerias
+library(zoo)
+library(xts) # se requiere de zoo para xts
+library(TSstudio) # necesario pata ts_info
+library(lubridate) # trabajar con fechas
+library(tidyverse) #procesamiento de datos
 ```
 
 # Proyecto de Series de tiempo
+
+## Traer datos
+
+Primero limpiaremos un poco la base de datos y la dejaremos como la necesitamos.
+
+```{r}
+##########analisi previo de la base
+# mirar algunas varibles
+str(Desaparecidos)
+table(Desaparecidos$`Estado de la desaparición`)
+table(Desaparecidos$Contexto)
+# mirar datos faltantes
+sum(is.na(Desaparecidos$`Fecha de la desaparición`)) # 126
+```
+### Por año
+como el $%$ de datos faltantes es menor al 1% de los datos disponibles los eliminaremos para mayor facilidad de trabajo. Además pasrameos la variable 
+'Fecha de la desaparición' a formato character para luego pasarla a fecha. 
+Por ultimo haremos un procesamiento de los datos para un conteo
+
+```{r}
+# datos de trabajo
+Data <- data.frame(Desaparecidos$`Fecha de la desaparición`,Desaparecidos$Contexto)
+colnames(Data) <- c("Fecha", "Dummy")
+# limpiando datoa faltantes
+Data <- Data[-which(is.na(Data$Fecha)),]
+Data$Fecha <- as.character(Data$Fecha)
+str(Data)
+# procesamiento de los datos
+Desa_año <- Data %>% 
+      mutate(Fecha = as.Date(Fecha)) %>% 
+      group_by(Fecha = floor_date(Fecha, unit = 'year')) %>% 
+      summarise(Conteo = n())
+str(Desa_año)
+```
+Ahora intentaremos usar **xts** para poder trabajar con un objeto que sea un serie
+de tiempo en R
+
+```{r}
+# objeto serie de tiempo
+Data_xts <- xts(Desa_año$Conteo, order.by = Desa_año$Fecha)
+plot(Data_xts)
+head(Data_xts)
+ts_info(Data_xts)
+class(Data_xts)
+frequency(Data_xts)
+#
+periodicity(Data_xts)
+tclass(Data_xts)
+```
+### por Mes
+```{r}
+# procesamiento de los datos
+Desa_mes <- Data %>% 
+      mutate(Fecha = as.Date(Fecha)) %>% 
+      filter(Fecha >= as.Date('2000-01-01'),
+             Fecha <= as.Date('2022-12-31')) %>% 
+      group_by(Fecha = floor_date(Fecha, unit = 'month')) %>% 
+      summarise(Conteo = n())
+str(Desa_mes)
+```
+```{r}
+# objeto serie de tiempo
+Data_xts <- xts(Desa_mes$Conteo, order.by = Desa_mes$Fecha)
+plot(Data_xts,ylim=c(200,1800))
+head(Data_xts)
+ts_info(Data_xts)
+class(Data_xts)
+frequency(Data_xts)
+#
+periodicity(Data_xts)
+tclass(Data_xts)
+```
+
+
+
+

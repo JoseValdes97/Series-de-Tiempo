@@ -8,6 +8,7 @@ format: html
 
 Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see <https://quarto.org>.
 
+
 ## Running Codeasasasasasaaaaaaaaaa
 
 When you click the **Render** button a document will be generated that includes both contentsdsd and the output of embedded code. You can embed code like this:
@@ -24,3 +25,5 @@ You can add options to executable code like this
 ```
 
 The `echo: false` option disables the printing of code (only output is displayed).
+
+# Ejemplo de histograma

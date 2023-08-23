@@ -89,6 +89,19 @@ periodicity(Data_xts)
 tclass(Data_xts)
 ```
 
+## Tasa de crecimiento mensual con respecto al periodo anterior del IPC de servicios en Colombia 
 
+```{r}
+IPCservPAserie<-xts(IPCservPA$COLCPGRSE01GPM,order.by=IPCservPA$observation_date)
 
+plot(IPCservPAserie)
+head(IPCservPAserie)
+ts_info(IPCservPAserie)
+class(IPCservPAserie)
+frequency(IPCservPAserie)
+#
+periodicity(IPCservPAserie)
+tclass(IPCservPAserie)
+
+```
 

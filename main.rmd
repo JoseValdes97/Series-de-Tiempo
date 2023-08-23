@@ -156,9 +156,7 @@ periodicity(Data_xts)
 tclass(Data_xts)
 ```
 
-
-
-
+##### dskfjadsjfklasjfasñjdl
 
 
 

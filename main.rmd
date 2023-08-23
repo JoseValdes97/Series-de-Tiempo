@@ -88,6 +88,80 @@ frequency(Data_xts)
 periodicity(Data_xts)
 tclass(Data_xts)
 ```
+## por hora
+
+### temperatura
+
+Miraremos primero las temperaturas en la ciudad de miami durante un fenomeno tropical sucedido en puerto rico zona cercana a miami.
+
+#### trabajo con los datos
+
+```{r}
+# datos de trabajo
+Data <- data.frame(temperature$datetime,temperature$Miami)
+colnames(Data) <- c("Fecha tiempo", "Temperatura")
+# limpiando datos faltantes
+str(Data)
+# procesamiento de los datos
+Temp_hour <- Data %>% 
+      filter(`Fecha tiempo` >= as.Date("2017-09-16"),
+             `Fecha tiempo` < as.Date("2017-09-29"))
+str(Temp_hour)
+```
+
+```{r}
+# objeto serie de tiempo
+Data_xts <- xts(Temp_hour$Temperatura, order.by = Temp_hour$`Fecha tiempo`)
+plot(Data_xts,ylim = c(297,307))
+head(Data_xts)
+ts_info(Data_xts)
+class(Data_xts)
+frequency(Data_xts)
+#
+periodicity(Data_xts)
+tclass(Data_xts)
+```
+### bitcoin
+
+miararemos el valor de cierre en bolsa del bitcoin entre un periodo en noviembre del 2021.
+
+#### trabajo con los datos
+
+```{r}
+# datos de trabajo
+Data <- data.frame(BTC_2021min$date,BTC_2021min$close)
+colnames(Data) <- c("Fecha tiempo", "Valor")
+# limpiando datos faltantes
+str(Data)
+Data$`Fecha tiempo` <- as.POSIXct(Data$`Fecha tiempo`, format = "%d/%m/%Y %H:%M")
+str(Data)
+# procesamiento de los datos
+Bitcoin_hour <- Data %>% 
+      filter(`Fecha tiempo` >= as.Date("2021-11-05"),
+             `Fecha tiempo` < as.Date("2021-11-16")) %>% 
+      group_by(Horas = floor_date(`Fecha tiempo`, unit = "hour")) %>% 
+      summarise(MeanValueHour = mean(Valor))
+str(Bitcoin_hour)
+```
+```{r}
+# objeto serie de tiempo
+Data_xts <- xts(Bitcoin_hour$MeanValueHour, order.by = Bitcoin_hour$Horas)
+plot(Data_xts, ylim = c(60000,69000))
+head(Data_xts)
+ts_info(Data_xts)
+class(Data_xts)
+frequency(Data_xts)
+#
+periodicity(Data_xts)
+tclass(Data_xts)
+```
+
+##### dskfjadsjfklasjfasñjdl
+
+
+
+
+
 
 
 
